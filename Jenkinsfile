@@ -23,7 +23,7 @@ pipeline {
         stage('Deploy') {
             steps {
                 echo 'Deploying....'
-                sh 'stop_container.sh'
+                sh 'docker ps -q --filter name="flask" | xargs -r docker stop'
                 sh 'docker run -d -p 5000:5000 flask'
             }
         }
