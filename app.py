@@ -7,7 +7,7 @@ HTML = """<!DOCTYPE html>
 <html lang="pl">
 <head>
   <meta charset="UTF-8">
-  <title>Narzedzia tekstowe</title>
+  <title>Narzedzia tekstowe v1</title>
   <style>
     body { font-family: Arial, sans-serif; max-width: 600px; margin: 40px auto; padding: 0 20px; background: #f5f5f5; }
     h1 { color: #333; }
