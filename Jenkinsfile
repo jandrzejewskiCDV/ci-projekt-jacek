@@ -83,7 +83,7 @@ pipeline {
 
     post {
         success {
-            echo "OK — galaz: ${env.GIT_BRANCH}"
+            echo "OK — ${env.BUILD_NUMBER} / ${params.SRODOWISKO} / ${env.BUILD_IMAGE}"
         }
         failure {
             echo 'BLAD! Sprawdz logi.'
