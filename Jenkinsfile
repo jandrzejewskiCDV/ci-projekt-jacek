@@ -1,11 +1,24 @@
 pipeline {
     agent any
 
+    parameters {
+        choice(
+            name: 'SRODOWISKO',
+            choices: ['dev', 'staging', 'prod'],
+            description: 'Srodowisko docelowe'
+        )
+    }
+
+    options {
+        timeout(time: 15, unit: 'MINUTES')
+    }
+
     stages {
         stage('Info') {
             steps {
                 echo "Galaz: ${env.GIT_BRANCH}"
                 echo "Build: ${env.BUILD_NUMBER}"
+                echo "Deploy na: ${params.SRODOWISKO}"
             }
         }
         stage('Test') {
@@ -23,6 +36,18 @@ pipeline {
             steps {
                 echo 'Building..'
                 sh 'docker build -t flask .'
+            }
+        }
+        stage('Verify-Deploy'){
+            options {
+                timeout(time: 5, unit: 'MINUTES')
+            }
+            when {
+                expression { params.SRODOWISKO == 'prod' }
+            }
+            steps {
+                input message: 'Czy na pewno wdrozyc na PRODUKCJE?',
+                ok: 'Tak, wdrazaj!'
             }
         }
         stage('Deploy') {
