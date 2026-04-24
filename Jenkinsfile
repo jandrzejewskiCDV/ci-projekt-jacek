@@ -52,6 +52,14 @@ pipeline {
                 sh "docker inspect ${BUILD_IMAGE}"
             }
         }
+        stage('Deploy-Notify'){
+            when {
+                expression { params.SRODOWISKO == 'dev' }
+            }
+            steps {
+                echo 'DEPLOY IN PROGRESS'
+            }
+        }
         stage('Verify-Deploy'){
             options {
                 timeout(time: 5, unit: 'MINUTES')
@@ -69,14 +77,6 @@ pipeline {
                 echo 'Deploying....'
                 sh 'docker rm -f flask 2> /dev/null'
                 sh "docker run -d -p 5000:5000 --name flask ${BUILD_IMAGE}"
-            }
-        }
-        stage('Deploy-Success-Notify'){
-            when {
-                expression { params.SRODOWISKO == 'dev' }
-            }
-            steps {
-                echo 'Sukces na dev'
             }
         }
     }
