@@ -1,4 +1,4 @@
-from tools import na_wielkie, na_male, policz_slowa, odwroc
+from tools import na_wielkie, na_male, policz_slowa, odwroc, add
 
 def test_na_wielkie():
     assert na_wielkie("hello") == "HELLO"
@@ -20,9 +20,14 @@ def test_odwroc():
     assert odwroc("hello") == "olleh"
     assert odwroc("") == ""
 
+def test_add():
+    assert add(1, 2) == 3
+    assert add(5, -2) == 3
+
 if __name__ == "__main__":
     test_na_wielkie()
     test_na_male()
     test_policz_slowa()
     test_odwroc()
+    test_add()
     print("Wszystkie testy OK")
