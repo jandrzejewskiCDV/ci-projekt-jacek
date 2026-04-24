@@ -1,6 +1,12 @@
 pipeline {
     agent any
 
+    environment{
+        APP = "apka"
+        VERSION = "1.0"
+        BUILD_IMAGE="flask-${env.BUILD_NUMBER}"
+    }
+
     parameters {
         choice(
             name: 'SRODOWISKO',
@@ -10,12 +16,14 @@ pipeline {
     }
 
     options {
-        timeout(time: 15, unit: 'MINUTES')
+        timeout(time: 20, unit: 'MINUTES')
     }
 
     stages {
         stage('Info') {
             steps {
+                echo "nazwa: ${env.APP}"
+                echo "wersja: ${params.VERSION}"
                 echo "Galaz: ${env.GIT_BRANCH}"
                 echo "Build: ${env.BUILD_NUMBER}"
                 echo "Deploy na: ${params.SRODOWISKO}"
@@ -35,7 +43,13 @@ pipeline {
         stage('Build') {
             steps {
                 echo 'Building..'
-                sh 'docker build -t flask .'
+                sh "docker build -t ${BUILD_IMAGE} ."
+            }
+        }
+        stage('Analisys') {
+            steps {
+                echo 'Analyzing..'
+                sh "docker inspect ${BUILD_IMAGE}"
             }
         }
         stage('Verify-Deploy'){
@@ -54,7 +68,15 @@ pipeline {
             steps {
                 echo 'Deploying....'
                 sh 'docker rm -f flask 2> /dev/null'
-                sh 'docker run -d -p 5000:5000 --name flask flask'
+                sh "docker run -d -p 5000:5000 --name flask ${BUILD_IMAGE}"
+            }
+        }
+        stage('Deploy-Success-Notify'){
+            when {
+                expression { params.SRODOWISKO == 'dev' }
+            }
+            steps {
+                echo 'Sukces na dev'
             }
         }
     }
