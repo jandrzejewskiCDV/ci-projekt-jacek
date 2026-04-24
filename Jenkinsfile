@@ -23,7 +23,7 @@ pipeline {
         stage('Deploy') {
             steps {
                 echo 'Deploying....'
-                sh 'stop_container'
+                sh 'stop_container.sh'
                 sh 'docker run -d -p 5000:5000 flask'
             }
         }
